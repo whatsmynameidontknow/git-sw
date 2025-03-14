@@ -123,6 +123,19 @@ func displayCreateForm() (Profile, error) {
 		if err != nil {
 			return Profile{}, err
 		}
+		if keyFormat == OPENPGP {
+			gpgProgramPrompt := new(promptui.Prompt)
+			gpgProgramPrompt.Label = "Enter your GPG program"
+			gpgProgramPrompt.Default = "gpg"
+			gpgProgram, err := gpgProgramPrompt.Run()
+			if err != nil {
+				return Profile{}, err
+			}
+			err = profile.Config.Set("gpg.program", gpgProgram)
+			if err != nil {
+				return Profile{}, nil
+			}
+		}
 		err = profile.Config.Set("gpg.format", string(keyFormat))
 		if err != nil {
 			return Profile{}, err
