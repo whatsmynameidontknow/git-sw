@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/mail"
 	"os"
@@ -148,6 +149,8 @@ func displayCreateForm() (Profile, error) {
 		if err != nil {
 			return Profile{}, err
 		}
+	} else if !errors.Is(err, promptui.ErrAbort) {
+		return Profile{}, err
 	}
 
 	return profile, nil
