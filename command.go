@@ -113,11 +113,10 @@ var commands = map[Action]Command{
 					return err
 				}
 				deleteGlobal = app.UI.ConfirmDelete()
-				if deleteGlobal {
-					goto deleteConfig
-				} else {
-					return nil
+				if !deleteGlobal {
+					return ErrDeleteAborted
 				}
+				goto deleteConfig
 			}
 			selected, err = app.UI.SelectProfile(profiles)
 			if err != nil {
