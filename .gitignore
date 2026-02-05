@@ -1,3 +1,6 @@
 nganu
 .commitlintrc.js
 dist/
+git-sw
+git-sw-test
+implementation_plan.md
