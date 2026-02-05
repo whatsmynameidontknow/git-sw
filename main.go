@@ -26,6 +26,10 @@ func main() {
 		flag.Usage()
 		return
 	}
+
+	// Initialize AppState with appropriate UI
+	app := NewAppState(noTUI)
+
 	cmd := flag.Arg(0)
 	action := getAction(strings.ToLower(cmd))
 	if !action.IsValid() {
@@ -63,7 +67,7 @@ func main() {
 	if !ok {
 		errorAndExit(ErrNotImplemented)
 	}
-	err = command.Func()
+	err = command.Func(app)
 	if err != nil {
 		errorAndExit(err)
 	}
