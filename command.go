@@ -7,15 +7,15 @@ import (
 )
 
 type Command struct {
-	Func        func() error
+	Func        func(app *AppState) error
 	Description string
 }
 
 var commands = map[Action]Command{
 	CREATE: {
 		Description: "Create a new profile.",
-		Func: func() error {
-			profile, err := ui.CreateProfile()
+		Func: func(app *AppState) error {
+			profile, err := app.UI.CreateProfile()
 			if err != nil {
 				return err
 			}
@@ -33,11 +33,11 @@ var commands = map[Action]Command{
 	},
 	USE: {
 		Description: "Select a profile to use.",
-		Func: func() error {
+		Func: func(app *AppState) error {
 			if !isGlobal && !isGitDirectory() {
 				return ErrNotGitDirectory
 			}
-			selected, err := ui.SelectProfile(profiles)
+			selected, err := app.UI.SelectProfile(profiles)
 			if err != nil {
 				return err
 			}
@@ -59,8 +59,8 @@ var commands = map[Action]Command{
 	},
 	LIST: {
 		Description: "List all available profiles.",
-		Func: func() error {
-			err := ui.ListProfiles(profiles)
+		Func: func(app *AppState) error {
+			err := app.UI.ListProfiles(profiles)
 			if err != nil {
 				return err
 			}
@@ -69,27 +69,27 @@ var commands = map[Action]Command{
 	},
 	EDIT: {
 		Description: "Edit an existing profile in text editor.",
-		Func: func() error {
+		Func: func(app *AppState) error {
 			var (
 				selected Profile
 				err      error
 			)
 			if isGlobal {
-				err = ui.EditProfile(filepath.Join(userHomeDir, ".gitconfig"))
+				err = app.UI.EditProfile(filepath.Join(userHomeDir, ".gitconfig"))
 				if err != nil {
 					return err
 				}
 				selected.Name = ".gitconfig"
 				goto successMsg
 			}
-			selected, err = ui.SelectProfile(profiles)
+			selected, err = app.UI.SelectProfile(profiles)
 			if err != nil {
 				return err
 			}
 			if selected.Name == "default" {
 				return ErrEditDefaultConfig
 			}
-			err = ui.EditProfile(filepath.Join(saveDirPath, selected.DirName, ".gitconfig"))
+			err = app.UI.EditProfile(filepath.Join(saveDirPath, selected.DirName, ".gitconfig"))
 			if err != nil {
 				return err
 			}
@@ -100,7 +100,7 @@ var commands = map[Action]Command{
 	},
 	DELETE: {
 		Description: "Delete an existing profile.",
-		Func: func() error {
+		Func: func(app *AppState) error {
 			var (
 				selected     Profile
 				err          error
@@ -112,14 +112,14 @@ var commands = map[Action]Command{
 				if err != nil {
 					return err
 				}
-				deleteGlobal = ui.ConfirmDelete()
+				deleteGlobal = app.UI.ConfirmDelete()
 				if deleteGlobal {
 					goto deleteConfig
 				} else {
 					return nil
 				}
 			}
-			selected, err = ui.SelectProfile(profiles)
+			selected, err = app.UI.SelectProfile(profiles)
 			if err != nil {
 				return err
 			}

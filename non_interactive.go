@@ -84,9 +84,9 @@ func (n *NoTUI) CreateProfile() (Profile, error) {
 		}
 
 		// Determine key format
-		keyFormat := GPGFormat(strings.ToLower(keyFormatFlag))
-		if keyFormatFlag == "" {
-			keyFormat = OPENPGP // default format
+		keyFormat := OPENPGP // default format
+		if keyFormatFlag != "" {
+			keyFormat = GPGFormat(strings.ToLower(keyFormatFlag))
 		}
 
 		// Validate key format
@@ -180,7 +180,11 @@ func (n *NoTUI) ListProfiles(profiles []Profile) error {
 
 func (n *NoTUI) ConfirmDelete() bool {
 	// In non-interactive mode, require --yes flag for safety
-	return yesFlag
+	if !yesFlag {
+		fmt.Fprintln(os.Stderr, ErrDeleteNoConfirm)
+		return false
+	}
+	return true
 }
 
 func (n *NoTUI) EditProfile(path string) error {

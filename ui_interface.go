@@ -15,6 +15,20 @@ type UserInterface interface {
 	EditProfile(path string) error
 }
 
-// ui is the global user interface implementation.
-// It is set in main() based on the --no-tui flag.
-var ui UserInterface
+// AppState holds shared application state and dependencies.
+// This replaces global mutable state with an explicit dependency injection pattern.
+type AppState struct {
+	UI UserInterface
+}
+
+// NewAppState creates a new AppState with the appropriate UI implementation
+// based on the noTUI flag.
+func NewAppState(noTUI bool) *AppState {
+	var ui UserInterface
+	if noTUI {
+		ui = &NoTUI{}
+	} else {
+		ui = &TUI{}
+	}
+	return &AppState{UI: ui}
+}

@@ -27,12 +27,8 @@ func main() {
 		return
 	}
 
-	// Initialize UI based on --no-tui flag
-	if noTUI {
-		ui = &NoTUI{}
-	} else {
-		ui = &TUI{}
-	}
+	// Initialize AppState with appropriate UI
+	app := NewAppState(noTUI)
 
 	cmd := flag.Arg(0)
 	action := getAction(strings.ToLower(cmd))
@@ -71,7 +67,7 @@ func main() {
 	if !ok {
 		errorAndExit(ErrNotImplemented)
 	}
-	err = command.Func()
+	err = command.Func(app)
 	if err != nil {
 		errorAndExit(err)
 	}
