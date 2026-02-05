@@ -14,6 +14,7 @@ var (
 	ErrNotImplemented      = errors.New("not implemented")
 	ErrEditDefaultConfig   = fmt.Errorf("use '%s -g edit' to edit default config", os.Args[0])
 	ErrDeleteDefaultConfig = fmt.Errorf("use '%s -g delete' to delete default config", os.Args[0])
+	ErrDeleteAborted       = errors.New("delete aborted: confirmation required")
 	ErrInvalidPublicKeyExt = errors.New("invalid public key file extension")
 	ErrNotGitDirectory     = errors.New("not in a git directory")
 )
