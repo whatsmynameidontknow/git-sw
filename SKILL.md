@@ -38,6 +38,9 @@ git-sw --no-tui list
 ### Create a Profile
 ```bash
 git-sw --no-tui --profile <name> --name "<user-name>" --email "<user-email>" create
+
+# With signing key
+git-sw --no-tui --profile <name> --name "<user-name>" --email "<user-email>" --signing-key <key> --key-format <format> create
 ```
 
 ### Switch Profile
@@ -59,5 +62,8 @@ git-sw --no-tui --profile <name> --yes delete
 - `--profile`: The name of the profile.
 - `--name`: Git user name.
 - `--email`: Git user email.
+- `--signing-key`: Signing key (GPG key ID, SSH pub path, or X.509 cert).
+- `--key-format`: Signing key format: `openpgp`, `ssh`, or `x509`.
+- `--gpg-program`: GPG program path (default: `gpg`).
 - `--yes`: Bypasses confirmation prompts.
 - `-g`: Global mode.
