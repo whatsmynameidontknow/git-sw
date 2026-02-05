@@ -26,6 +26,14 @@ func main() {
 		flag.Usage()
 		return
 	}
+
+	// Initialize UI based on --no-tui flag
+	if noTUI {
+		ui = &NoTUI{}
+	} else {
+		ui = &TUI{}
+	}
+
 	cmd := flag.Arg(0)
 	action := getAction(strings.ToLower(cmd))
 	if !action.IsValid() {

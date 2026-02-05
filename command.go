@@ -15,7 +15,7 @@ var commands = map[Action]Command{
 	CREATE: {
 		Description: "Create a new profile.",
 		Func: func() error {
-			profile, err := displayCreateForm()
+			profile, err := ui.CreateProfile()
 			if err != nil {
 				return err
 			}
@@ -37,7 +37,7 @@ var commands = map[Action]Command{
 			if !isGlobal && !isGitDirectory() {
 				return ErrNotGitDirectory
 			}
-			selected, err := displayProfileSelector(profiles)
+			selected, err := ui.SelectProfile(profiles)
 			if err != nil {
 				return err
 			}
@@ -60,7 +60,7 @@ var commands = map[Action]Command{
 	LIST: {
 		Description: "List all available profiles.",
 		Func: func() error {
-			err := displayProfileList(profiles)
+			err := ui.ListProfiles(profiles)
 			if err != nil {
 				return err
 			}
@@ -75,21 +75,21 @@ var commands = map[Action]Command{
 				err      error
 			)
 			if isGlobal {
-				err = openTextEditor(filepath.Join(userHomeDir, ".gitconfig"))
+				err = ui.EditProfile(filepath.Join(userHomeDir, ".gitconfig"))
 				if err != nil {
 					return err
 				}
 				selected.Name = ".gitconfig"
 				goto successMsg
 			}
-			selected, err = displayProfileSelector(profiles)
+			selected, err = ui.SelectProfile(profiles)
 			if err != nil {
 				return err
 			}
 			if selected.Name == "default" {
 				return ErrEditDefaultConfig
 			}
-			err = openTextEditor(filepath.Join(saveDirPath, selected.DirName, ".gitconfig"))
+			err = ui.EditProfile(filepath.Join(saveDirPath, selected.DirName, ".gitconfig"))
 			if err != nil {
 				return err
 			}
@@ -112,14 +112,14 @@ var commands = map[Action]Command{
 				if err != nil {
 					return err
 				}
-				deleteGlobal = displayDeleteConfirmation()
+				deleteGlobal = ui.ConfirmDelete()
 				if deleteGlobal {
 					goto deleteConfig
 				} else {
 					return nil
 				}
 			}
-			selected, err = displayProfileSelector(profiles)
+			selected, err = ui.SelectProfile(profiles)
 			if err != nil {
 				return err
 			}
