@@ -83,10 +83,10 @@ func (n *NoTUI) CreateProfile() (Profile, error) {
 			return Profile{}, ErrMissingSigningKey
 		}
 
-		// Determine key format
-		keyFormat := OPENPGP // default format
-		if keyFormatFlag != "" {
-			keyFormat = GPGFormat(strings.ToLower(keyFormatFlag))
+		// Determine key format: use provided format or default to openpgp
+		keyFormat := GPGFormat(strings.ToLower(keyFormatFlag))
+		if keyFormat == "" {
+			keyFormat = OPENPGP
 		}
 
 		// Validate key format
